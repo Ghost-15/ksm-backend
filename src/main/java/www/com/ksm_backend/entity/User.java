@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -36,20 +38,19 @@ public class User implements UserDetails, Serializable {
   @Column(name = "phone_number", nullable = false, length = 100)
   private String phone_number;
 
-  @ManyToMany(cascade = CascadeType.PERSIST)
-  @JoinTable(
-          name = "user_role",
-          joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
-  private Set<Role> roles;
+  @Enumerated(EnumType.STRING)
+  private Role role;
 
-//  @OneToMany(mappedBy = "user")
-//  private List<Token> tokens;
+  @OneToMany(mappedBy = "user")
+  private List<Token> tokens;
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.getRoles().stream().map(r -> new SimpleGrantedAuthority(r.getName())).toList();
+    return List.of(new SimpleGrantedAuthority(role.name()));
+//    return role.getAuthorities();
   }
+
 
   @Override
   public String getPassword() {

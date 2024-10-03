@@ -12,6 +12,7 @@ import lombok.ToString;
 public class RegisterProduct {
     private String name;
     private String category;
+    private String sousCategory;
     private String description;
     private int conditionnement;
     private String coloris;

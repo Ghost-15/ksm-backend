@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import www.com.ksm_backend.entity.Role;
 
 @Getter
 @AllArgsConstructor
@@ -16,5 +17,5 @@ public class RegisterRequest {
   //    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
   private String phone_number;
-  private String role;
+  private Role role;
 }

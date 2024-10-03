@@ -1,30 +1,24 @@
 package www.com.ksm_backend.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+public enum Role {
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "role")
-public class Role implements Serializable {
+    CEO,
+    DEV,
+    ADMIN
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    private int role_id;
-
-    @Column(name = "name", nullable = false, unique = true, length = 50)
-    private String name;
-
-//    @ManyToMany(mappedBy = "role")
-//    private Set<User> users;
+//    @Getter
+//    private final Set<Permission> permissions;
+//
+//    public List<SimpleGrantedAuthority> getAuthorities() {
+//        var authorities = getPermissions()
+//                .stream()
+//                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+//                .collect(Collectors.toList());
+//        authorities.add(new SimpleGrantedAuthority("ROLE_"+this.name()));
+//        return authorities;
+//    }
 }

@@ -77,21 +77,21 @@ public class EmailService {
 
         mailSender.send(message);
     }
-    @Async
-    public void send_ForgotPswdEmail(Token token) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("tatibatchi15@gmail.com");
-        message.setTo(token.getUser().getUsername());
-        message.setSubject("Your activation Code");
-
-        String texte = String.format(
-                "Hi "+token.getUser().getFirst_name()+
-                "%s, <br /> Use this secret code : "+token.getCode()+" to complete the configuration." +
-                "<br /> The code will expire in 15 min"
-
-        );
-        message.setText(texte);
-
-        mailSender.send(message);
-    }
+//    @Async
+//    public void send_ForgotPswdEmail(Token token) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("tatibatchi15@gmail.com");
+//        message.setTo(token.getUser().getUsername());
+//        message.setSubject("Your activation Code");
+//
+//        String texte = String.format(
+//                "Hi "+token.getUser().getFirst_name()+
+//                "%s, <br /> Use this secret code : "+token.getCode()+" to complete the configuration." +
+//                "<br /> The code will expire in 15 min"
+//
+//        );
+//        message.setText(texte);
+//
+//        mailSender.send(message);
+//    }
 }
