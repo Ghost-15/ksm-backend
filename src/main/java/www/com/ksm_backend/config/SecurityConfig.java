@@ -22,7 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static www.com.ksm_backend.entity.Role.ADMIN;
+import static www.com.ksm_backend.entity.Role.CEO;
 import static www.com.ksm_backend.entity.Role.DEV;
 
 @Configuration
@@ -42,9 +42,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hub/**","/backend/**").permitAll()
-                        .requestMatchers("/SQL/**").hasAnyRole(ADMIN.name(),DEV.name())
-//                        .requestMatchers(POST,"/backend/register").hasAuthority(DEV_CRUD.name())
-//                        .requestMatchers("/backend/register").hasRole(DEV.name())
+                        .requestMatchers("/SQL/**").hasAnyRole(CEO.name(), DEV.name())
                         .anyRequest().authenticated())
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

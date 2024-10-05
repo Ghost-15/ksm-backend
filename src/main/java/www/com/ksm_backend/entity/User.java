@@ -21,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User implements UserDetails, Serializable {
+public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +47,8 @@ public class User implements UserDetails, Serializable {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(role.name()));
-//    return role.getAuthorities();
+//    return List.of(new SimpleGrantedAuthority(role.name()));
+    return role.getAuthorities();
   }
 
 

@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import www.com.ksm_backend.repository.TokenRepository;
-import www.com.ksm_backend.repository.UserRepository;
 import www.com.ksm_backend.service.JwtService;
 
 import java.io.IOException;
@@ -30,10 +29,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+        if (request.getServletPath().contains("/backend")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String authHeader = request.getHeader(AUTHORIZATION) ;
         final String username;
         final String jwtToken;
-        if (request.getServletPath().contains("/backend")) {
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }

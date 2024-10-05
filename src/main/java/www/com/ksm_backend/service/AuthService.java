@@ -11,8 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import www.com.ksm_backend.dto.*;
+import www.com.ksm_backend.entity.Role;
 import www.com.ksm_backend.entity.Token;
-import www.com.ksm_backend.entity.TokenType;
+import www.com.ksm_backend.config.TokenType;
 import www.com.ksm_backend.entity.User;
 import www.com.ksm_backend.repository.TokenRepository;
 import www.com.ksm_backend.repository.UserRepository;
@@ -40,8 +41,6 @@ public class AuthService {
   private AuthenticationManager authenticationManager;
   @Autowired
   private JwtService jwtService;
-//  @Autowired
-//  private TokenService tokenService;
   @Autowired
   private EmailService emailService;
   @Autowired
@@ -84,6 +83,7 @@ public class AuthService {
     authCookie.setMaxAge((int) Duration.of(1, ChronoUnit.DAYS).toSeconds());
 
     response.addCookie(authCookie);
+    revokeAllUserTokens(user);
     saveUserToken(user, jwtToken);
     return AuthResponse.builder()
         .access_token(jwtToken)
@@ -117,6 +117,7 @@ public class AuthService {
     String token;
     String username;
     String jwtToken = null;
+    String role = "";
 //    String authorizationHeader = request.getHeader(AUTHORIZATION);
 //    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 //      String refreshToken = authorizationHeader.substring("Bearer ".length());
@@ -129,7 +130,7 @@ public class AuthService {
             username = jwtService.extractUsername(token);
             var user = userRepository.findByUsername(username).orElseThrow();
             final var userDetails = userDetailsService.loadUserByUsername(username);
-
+            role = user.getRole().toString();
             Cookie DSC = new Cookie(String.valueOf(user.getUser_id()), null);
             DSC.setMaxAge(0);
             response.addCookie(DSC);
@@ -137,20 +138,14 @@ public class AuthService {
             if (jwtService.isTokenValid(token, userDetails)) {
               try {
                 jwtToken = jwtService.generateAccesToken(userDetails);
-
+                revokeAllUserTokens(user);
+                saveUserToken(user, jwtToken);
                 Cookie authCookie = new Cookie(String.valueOf(user.getUser_id()), jwtService.generateRefreshToken(userDetails));
                 authCookie.setHttpOnly(true);
                 authCookie.setSecure(true);
                 authCookie.setPath("/");
                 authCookie.setMaxAge((int) Duration.of(1, ChronoUnit.DAYS).toSeconds());
 
-//                Map<String, Object> mapToken = new HashMap<>();
-//                mapToken.put("accessToken", jwtService.generateAccesToken(user));
-                
-
-//                String json = HelperUtils.JSON_WRITER.writeValueAsString(mapToken);
-//                response.setContentType("application/json; charset=UTF-8");
-//                response.getWriter().write(json);
                 
                 response.addCookie(authCookie);
                 
@@ -168,6 +163,7 @@ public class AuthService {
 
     return AuthResponse.builder()
             .access_token(jwtToken)
+            .role(Role.valueOf(role))
             .build();
 //    }else{
 //      response.setStatus(UNAUTHORIZED.value());
