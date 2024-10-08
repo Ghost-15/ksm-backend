@@ -30,7 +30,6 @@ public class MysqlController {
     private AuthService service;
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('DEV')")
     public void addUser(@RequestBody RegisterRequest request, HttpServletResponse response){
         service.addUser(request, response);
     }

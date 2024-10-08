@@ -29,7 +29,6 @@ public class AuthController {
   public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) {
     return ResponseEntity.ok(service.refreshToken(request, response));
   }
-
   @PostMapping("/changePswd")
   public void changePassword(@RequestBody PswdDTO pswdDTO, Principal connectedUser, HttpServletResponse response) {
     service.changePassword(pswdDTO, connectedUser, response);
