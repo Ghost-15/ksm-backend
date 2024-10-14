@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import www.com.ksm_backend.dto.RegisterProduct;
 import www.com.ksm_backend.entity.Product;
+import www.com.ksm_backend.repository.ProductRepository;
 import www.com.ksm_backend.service.ProductService;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
@@ -28,6 +30,8 @@ import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 public class HubController {
     @Autowired
     private ProductService service;
+    @Autowired
+    private ProductRepository repository;
 
     @PostMapping("/addProduct")
     public void addProduct(
@@ -51,6 +55,14 @@ public class HubController {
                 coloris,
                 prix,
                 response);
+    }
+    @GetMapping("/getAllProducts")
+    public List<Product> getAllProducts() {
+        return repository.findAll();
+    }
+    @GetMapping("/getByCategorie/{categorieName}")
+    public List<Product> getByCategorie(@PathVariable("categorieName") String categorieName) {
+        return repository.findAllByCategorie(categorieName);
     }
     @GetMapping("/getProduct/{productName}")
     public ResponseEntity<Product> getProduct(@PathVariable("productName") String productName) throws DataFormatException, IOException {
