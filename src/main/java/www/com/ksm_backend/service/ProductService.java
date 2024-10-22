@@ -14,6 +14,7 @@ import www.com.ksm_backend.repository.SousCategoryRepository;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 
@@ -28,29 +29,19 @@ public class ProductService {
     CategoryRepository categoryRepository;
     @Autowired
     SousCategoryRepository sousCategoryRepository;
-    public void addProduct(
-            MultipartFile file,
-            String name,
-            String category,
-//          String sousCategory,
-            String description,
-            int conditionnement,
-            String coloris,
-            int prix,
-            HttpServletResponse response) throws IOException {
+    public void addProduct(RegisterProduct registerProduct, HttpServletResponse response) {
 
-        Optional<Category> categoryOptional = categoryRepository.findByName(category);
+        Optional<Category> categoryOptional = categoryRepository.findByName(registerProduct.getCategory());
 //        Optional<SousCategory> sousCategory = sousCategoryRepository.findByName(register.getSousCategory());
 
         Product product = new Product();
-        product.setName(name);
+        product.setName(registerProduct.getName().trim());
         product.setCategories(categoryOptional.get());
-        product.setDescription(description);
-        product.setConditionnement(conditionnement);
-        product.setColoris(coloris);
-        product.setPrix(prix);
-        product.setPicture(compressByte(file.getBytes()));
-        product.setType(file.getContentType());
+        product.setConditionnement(registerProduct.getConditionnement());
+        product.setColoris(registerProduct.getColoris());
+        product.setPrix(registerProduct.getPrix());
+        product.setPicture_url(registerProduct.getPicture_url().trim());
+        product.setDescription(registerProduct.getDescription());
         try {
             productRepository.save(product);
             response.setStatus(200);
@@ -59,22 +50,21 @@ public class ProductService {
         }
     }
 
-    public Product getProduct(String productName) throws DataFormatException, IOException {
+    public Product getProduct(String productName) {
         Optional<Product> product = productRepository.findByName(productName);
         return Product.builder()
                 .name(product.get().getName())
 //                .category(product.get().getCategory())
-                .description(product.get().getDescription())
                 .conditionnement(product.get().getConditionnement())
                 .coloris(product.get().getColoris())
                 .prix(product.get().getPrix())
-                .picture(decompressByte(product.get().getPicture()))
-                .type(product.get().getType())
+                .picture_url(product.get().getPicture_url())
+                .description(product.get().getDescription())
                 .build();
     }
 
-    public byte[] displayPicture(String pictureName) throws DataFormatException, IOException {
-        Optional<Product> product = productRepository.findByName(pictureName);
-        return decompressByte(product.get().getPicture());
+    public List<Product> getAllProduct() {
+        return productRepository.findAll();
     }
+
 }

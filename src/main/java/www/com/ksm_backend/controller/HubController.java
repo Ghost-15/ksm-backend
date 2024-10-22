@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import www.com.ksm_backend.dto.RegisterProduct;
 import www.com.ksm_backend.entity.Product;
 import www.com.ksm_backend.repository.ProductRepository;
@@ -34,27 +35,8 @@ public class HubController {
     private ProductRepository repository;
 
     @PostMapping("/addProduct")
-    public void addProduct(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("name") String name,
-            @RequestParam("category") String category,
-//            @RequestParam("sousCategory") String sousCategory,
-            @RequestParam("description") String description,
-            @RequestParam("conditionnement") int conditionnement,
-            @RequestParam("coloris") String coloris,
-            @RequestParam("prix") int prix,
-            HttpServletResponse response) throws IOException {
-
-        service.addProduct(
-                file,
-                name,
-                category,
-//                sousCategory,
-                description,
-                conditionnement,
-                coloris,
-                prix,
-                response);
+    public void addProduct(@RequestBody RegisterProduct registerProduct, HttpServletResponse response) {
+        service.addProduct(registerProduct, response);
     }
     @GetMapping("/getAllProducts")
     public List<Product> getAllProducts() {
@@ -65,14 +47,8 @@ public class HubController {
         return repository.findAllByCategorie(categorieName);
     }
     @GetMapping("/getProduct/{productName}")
-    public ResponseEntity<Product> getProduct(@PathVariable("productName") String productName) throws DataFormatException, IOException {
+    public ResponseEntity<Product> getProduct(@PathVariable("productName") String productName) {
         return ResponseEntity.ok(service.getProduct(productName));
     }
-    @GetMapping("/display/{pictureName}")
-    public ResponseEntity<?> displayPicture(@PathVariable("pictureName") String pictureName) throws DataFormatException, IOException {
-        byte[] picture = service.displayPicture(pictureName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf(IMAGE_PNG_VALUE))
-                .body(picture);
-    }
+
 }

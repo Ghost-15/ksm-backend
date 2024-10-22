@@ -13,26 +13,29 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class RegisterProduct {
-    @NotBlank
     @NotNull
+    @NotBlank
     private String name;
-    @NotBlank
     @NotNull
+    @NotBlank
     private String category;
-    @NotBlank
+//    @NotNull
+//    @NotBlank
+//    private String sousCategory;
     @NotNull
-    private String sousCategory;
     @NotBlank
-    @NotNull
-    private String description;
-    @NotBlank
-    @NotNull
     private int conditionnement;
-    @NotBlank
     @NotNull
+    @NotBlank
     private String coloris;
-    @NotBlank
     @NotNull
+    @NotBlank
     @Min(value = 1)
     private int prix;
+    @NotNull
+    @NotBlank
+    private String picture_url;
+    @NotNull
+    @NotBlank
+    private String description;
 }

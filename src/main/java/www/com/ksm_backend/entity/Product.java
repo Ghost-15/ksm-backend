@@ -22,22 +22,16 @@ public class Product {
     private String name;
 //    @Column(name = "category", nullable = false, length = 100)
 //    private String category;
-    @Column(name = "description", nullable = false, length = 200)
-    private String description;
     @Column(name = "conditionnement", nullable = false)
     private int conditionnement;
     @Column(name = "coloris", nullable = false)
     private String coloris;
     @Column(name = "prix", nullable = false)
     private int prix;
-    @Lob
-    @Column(name = "picture", nullable = false, columnDefinition = "LONGBLOB")
-    private byte[] picture;
-    @Column(name = "type", nullable = false)
-    private String type;
-//    @Lob
-//    @Column(name = "pdf")
-//    private byte[] pdf;
+    @Column(name = "picture_url", nullable = false)
+    private String picture_url;
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    private String description;
 
 //    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
