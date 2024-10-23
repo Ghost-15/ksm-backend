@@ -37,5 +37,8 @@ public class RegisterProduct {
     private String picture_url;
     @NotNull
     @NotBlank
+    private String pdf_url;
+    @NotNull
+    @NotBlank
     private String description;
 }

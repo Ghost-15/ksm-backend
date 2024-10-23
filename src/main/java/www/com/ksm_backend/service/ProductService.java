@@ -41,6 +41,7 @@ public class ProductService {
         product.setColoris(registerProduct.getColoris());
         product.setPrix(registerProduct.getPrix());
         product.setPicture_url(registerProduct.getPicture_url().trim());
+        product.setPdf_url(registerProduct.getPdf_url().trim());
         product.setDescription(registerProduct.getDescription());
         try {
             productRepository.save(product);
@@ -59,6 +60,7 @@ public class ProductService {
                 .coloris(product.get().getColoris())
                 .prix(product.get().getPrix())
                 .picture_url(product.get().getPicture_url())
+                .pdf_url(product.get().getPdf_url())
                 .description(product.get().getDescription())
                 .build();
     }

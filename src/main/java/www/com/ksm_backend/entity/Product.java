@@ -30,6 +30,8 @@ public class Product {
     private int prix;
     @Column(name = "picture_url", nullable = false)
     private String picture_url;
+    @Column(name = "pdf_url", nullable = false)
+    private String pdf_url;
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
