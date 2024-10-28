@@ -3,8 +3,6 @@ package www.com.ksm_backend.service;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import www.com.ksm_backend.dto.RegisterProduct;
 import www.com.ksm_backend.entity.Category;
 import www.com.ksm_backend.entity.Product;
@@ -12,14 +10,8 @@ import www.com.ksm_backend.repository.CategoryRepository;
 import www.com.ksm_backend.repository.ProductRepository;
 import www.com.ksm_backend.repository.SousCategoryRepository;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.zip.DataFormatException;
-
-import static www.com.ksm_backend.config.ByteUtils.compressByte;
-import static www.com.ksm_backend.config.ByteUtils.decompressByte;
 
 @Service
 public class ProductService {

@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/HUB/**","/backend/**").permitAll()
+                        .requestMatchers("/HUB/**","/notif/**","/backend/**").permitAll()
                         .requestMatchers("/SQL/**").hasAnyRole(CEO.name(), DEV.name())
                         .anyRequest().authenticated())
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

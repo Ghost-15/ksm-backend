@@ -2,20 +2,58 @@ package www.com.ksm_backend.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import www.com.ksm_backend.dto.ContactUsDTO;
 import www.com.ksm_backend.entity.Token;
 
 @Service
 @AllArgsConstructor
 public class EmailService {
-
     private final JavaMailSender mailSender;
+    @Async
+    public void send_ContactUs(ContactUsDTO contactUsDTO, HttpServletResponse response) throws MessagingException {
 
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setFrom(contactUsDTO.getEmail());
+        helper.setTo("tatibatchi15@gmail.com");
+        helper.setSubject("Contact Us");
+
+        String html = "<!doctype html>\n" +
+                "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"\n" +
+                "      xmlns:th=\"http://www.thymeleaf.org\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\"\n" +
+                "          content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+                "    <title>noreply@email</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<div>Monsieur/Madame <b>" + contactUsDTO.getFullName() + "</b></div>\n" +
+                "\n" +
+                "<div>Message : <b>" + contactUsDTO.getMessage() + "</b></div>\n" +
+                "\n" +
+                "<div>Email : <b>" + contactUsDTO.getEmail() + "</b></div>\n" +
+                "\n" +
+                "<div>Numero : <b>" + contactUsDTO.getPhoneNumber() + "</b></div>\n" +
+                "</body>\n" +
+                "</html>\n";
+
+        helper.setText(html, true);
+        try {
+            mailSender.send(message);
+            response.setStatus(200);
+        } catch (Exception e) {
+            response.setStatus(406);
+        }
+    }
     @Async
     public void send_WelcomeEmail(String getUsername, String getFirst_name) throws MessagingException {
 //        SimpleMailMessage message = new SimpleMailMessage();
