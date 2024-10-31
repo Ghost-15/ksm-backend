@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDTO {
-
+    private int userId;
     private String code;
     private String username;
     private String message;
-
 }

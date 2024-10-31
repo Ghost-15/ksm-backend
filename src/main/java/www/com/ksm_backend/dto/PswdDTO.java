@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PswdDTO {
+    private int userId;
     private String username;
     private String currentPswd;
     private String newPswd;

@@ -28,18 +28,20 @@ public class AuthController {
   public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) {
     return ResponseEntity.ok(service.refreshToken(request, response));
   }
+  @PostMapping("/linkToNewPswd")
+  public void forgotPassword(@RequestBody AuthRequest request, HttpServletResponse response) {
+    service.linkToNewPswd(request, response);
+  }
+  @GetMapping("/confirm/{code}")
+  public void confirm(@PathVariable("code") String code, HttpServletResponse response) {
+    service.confirm(code, response);
+  }
   @PostMapping("/changePswd")
   public void changePassword(@RequestBody PswdDTO pswdDTO, Principal connectedUser, HttpServletResponse response) {
-    service.changePassword(pswdDTO, connectedUser, response);
+    service.changePswd(pswdDTO, connectedUser, response);
   }
-
-//  @PostMapping("/forgotPassword")
-//  public void forgotPassword(@RequestBody AuthRequest request) {
-//    service.forgotPassword(request);
-//  }
-
-  @PostMapping("/savePassword")
-  public void savePassword(@RequestBody PswdDTO pswdDTO, HttpServletResponse response) {
-    service.savePassword(pswdDTO, response);
+  @PostMapping("/changePswdLink")
+  public void changePswdLink(@RequestBody PswdDTO pswdDTO, HttpServletResponse response) {
+    service.changePswdLink(pswdDTO, response);
   }
 }

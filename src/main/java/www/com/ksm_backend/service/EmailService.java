@@ -36,13 +36,13 @@ public class EmailService {
                 "    <title>noreply@email</title>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "<div>Monsieur/Madame <b>" + contactUsDTO.getFullName() + "</b></div>\n" +
+                "<div>Monsieur/Madame <br>" + contactUsDTO.getFullName() + "</br></div>\n" +
                 "\n" +
-                "<div>Message : <b>" + contactUsDTO.getMessage() + "</b></div>\n" +
+                "<div>Message : <br>" + contactUsDTO.getMessage() + "</br></div>\n" +
                 "\n" +
-                "<div>Email : <b>" + contactUsDTO.getEmail() + "</b></div>\n" +
+                "<div>Email : <br>" + contactUsDTO.getEmail() + "</br></div>\n" +
                 "\n" +
-                "<div>Numero : <b>" + contactUsDTO.getPhoneNumber() + "</b></div>\n" +
+                "<div>Numero : <br>" + contactUsDTO.getPhoneNumber() + "</br></div>\n" +
                 "</body>\n" +
                 "</html>\n";
 
@@ -73,8 +73,8 @@ public class EmailService {
         helper.setTo(getUsername);
 
         String texte = String.format(
-                "Hi "+ getFirst_name +"%s, " +
-                "<br /> We are delighted to count you among the members of our platform%s; " +
+                "Hi "+ getFirst_name +
+                "<br /> We are delighted to count you among the members of our platform " +
                 "Thanks"
         );
         helper.setText(texte);
@@ -89,31 +89,44 @@ public class EmailService {
         mailSender.send(message);
     }
     @Async
-    public void send_changePswdEmail(String getUsername, String getFirst_name) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("tatibatchi15@gmail.com");
-        message.setTo(getUsername);
-        message.setSubject("Your activation Code");
-//        String content = "Dear [[name]],<br>"
-//                + "Please click the link below to verify your registration:<br>"
-//                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-//                + "Thank you,<br>"
-//                + "Your company name.";
-//        content = content.replace("[[name]]", user.getFullName());
-//        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
-//        content = content.replace("[[URL]]", verifyURL);
-//        <div class="container text-center">
-//    <h3>You have signed up successfully!</h3>
-//    <p>Please check your email to verify your account.</p>
-//    <h4><a th:href="/@{/login}">Click here to Login</a></h4>
-//</div>
-        String texte = String.format(
-                "Hi "+getFirst_name+
-                "%s, <br /> You have successfully change your password."
-        );
-        message.setText(texte);
+    public void send_linkToNewPswd(String getUsername, String getconfirmationUrl, HttpServletResponse response) throws MessagingException {
 
-        mailSender.send(message);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+        helper.setFrom("tatibatchi15@gmail.com");
+        helper.setTo(getUsername);
+        helper.setSubject("Créez un nouveau mot de passe");
+
+        String html = "<!doctype html>\n" +
+                "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"\n" +
+                "      xmlns:th=\"http://www.thymeleaf.org\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\"\n" +
+                "          content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+                "    <title>noreply@email</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<div>Voulez-vous réinitialiser votre mot de passe ?<br/></div>\n" +
+                "\n" +
+                "<div><br/>Nous avons reçu une demande de réinitialisation de mot de passe<br/></div>\n" +
+                "\n" +
+                "<div><br/>Lien : " + getconfirmationUrl + " </b></div>\n" +
+                "\n" +
+                "<div><br/>Le code expirera dans 15 minutes<br/></div>\n" +
+                "\n" +
+                "<div><br/>Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.<br/></div>\n" +
+                "</body>\n" +
+                "</html>\n";
+
+        helper.setText(html, true);
+        try {
+            mailSender.send(mimeMessage);
+            response.setStatus(200);
+        } catch (Exception e) {
+            response.setStatus(406);
+        }
     }
 //    @Async
 //    public void send_ForgotPswdEmail(Token token) {
