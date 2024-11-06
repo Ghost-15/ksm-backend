@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @Table(name = "code")
 public class Code {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_id")
-    private Integer code_id;
+    private int code_id;
     @Column(name = "code", nullable = false, unique = true)
     private String code;
     @Column(name = "created", nullable = false, unique = true)

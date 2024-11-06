@@ -16,13 +16,15 @@ import www.com.ksm_backend.entity.Token;
 @AllArgsConstructor
 public class EmailService {
     private final JavaMailSender mailSender;
+    private static final String NoReplyEmail = "tatibatchi15@gmail.com";
+    private static final String ForgotPswdURL = "http://localhost:5173/ForgotPswd";
     @Async
     public void send_ContactUs(ContactUsDTO contactUsDTO, HttpServletResponse response) throws MessagingException {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(contactUsDTO.getEmail());
-        helper.setTo("tatibatchi15@gmail.com");
+        helper.setTo(NoReplyEmail);
         helper.setSubject("Contact Us");
 
         String html = "<!doctype html>\n" +
@@ -36,13 +38,13 @@ public class EmailService {
                 "    <title>noreply@email</title>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "<div>Monsieur/Madame <br>" + contactUsDTO.getFullName() + "</br></div>\n" +
+                "<div>Monsieur/Madame " + contactUsDTO.getFullName() + "<br/></div>\n" +
                 "\n" +
-                "<div>Message : <br>" + contactUsDTO.getMessage() + "</br></div>\n" +
+                "<div><br/>Message : " + contactUsDTO.getMessage() + "<br/></div>\n" +
                 "\n" +
-                "<div>Email : <br>" + contactUsDTO.getEmail() + "</br></div>\n" +
+                "<div><br/>Email : " + contactUsDTO.getEmail() + "<br/></div>\n" +
                 "\n" +
-                "<div>Numero : <br>" + contactUsDTO.getPhoneNumber() + "</br></div>\n" +
+                "<div><br/>Numero : " + contactUsDTO.getPhoneNumber() + "</div>\n" +
                 "</body>\n" +
                 "</html>\n";
 
@@ -55,45 +57,46 @@ public class EmailService {
         }
     }
     @Async
-    public void send_WelcomeEmail(String getUsername, String getFirst_name) throws MessagingException {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("tatibatchi15@gmail.com");
-//        message.setTo(to);
-//        message.setSubject("""
-//                Merci de votre Confiance,
-//
-//                Ndaqo Vous Souhaitons La Bienvenu""");
-//        String htmlContent = "<h1>This is a test Spring Boot email</h1>" +
-//                             "<p>It can contain <strong>HTML</strong> content.</p>";
-//        message.setText(htmlContent);
+    public void send_WelcomeEmail(String getUsername, String getLast_name) throws MessagingException {
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("tatibatchi15@gmail.com");
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setFrom(NoReplyEmail);
         helper.setTo(getUsername);
+        helper.setSubject("Bienvenu sur notre plateforme KongoSafeManagement Shop");
 
-        String texte = String.format(
-                "Hi "+ getFirst_name +
-                "<br /> We are delighted to count you among the members of our platform " +
-                "Thanks"
-        );
-        helper.setText(texte);
-        helper.setSubject("""
-            Merci de votre Confiance,
+        String html = "<!doctype html>\n" +
+                "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"\n" +
+                "      xmlns:th=\"http://www.thymeleaf.org\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\"\n" +
+                "          content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+                "    <title>noreply@email</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<div>Cher, " + getLast_name + "<br/></div>\n" +
+                "\n" +
+                "<div><br/>Bienvenue chez KongoSafeManagement Shop<br/></div>\n" +
+                "\n" +
+                "<div><br/>Votre compte a été créé et un mot de passe vous a été automatiquement affectter.<br/></div>\n" +
+                "\n" +
+                "<div><br/>Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='"+ ForgotPswdURL +"'>ForgotPswdURL</a> <br/></div>\n" +
+                "\n" +
+                "<div><br/><br/><br/>L’équipe KongoSafeManagement Shop<br/></div>\n" +
+                "</body>\n" +
+                "</html>\n";
 
-            Vous Souhaitons La Bienvenu""");
-
-//            FileSystemResource fileSystem = new FileSystemResource(new File(attachment));
-//            helper.addAttachment(Objects.requireNonNull(fileSystem.getFilename()), fileSystem);
-
-        mailSender.send(message);
+        helper.setText(html, true);
+        mailSender.send(mimeMessage);
     }
     @Async
-    public void send_linkToNewPswd(String getUsername, String getconfirmationUrl, HttpServletResponse response) throws MessagingException {
+    public void send_linkToNewPswd(String getUsername, String getReinitialisationURL, HttpServletResponse response) throws MessagingException {
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
-        helper.setFrom("tatibatchi15@gmail.com");
+        helper.setFrom(NoReplyEmail);
         helper.setTo(getUsername);
         helper.setSubject("Créez un nouveau mot de passe");
 
@@ -112,11 +115,12 @@ public class EmailService {
                 "\n" +
                 "<div><br/>Nous avons reçu une demande de réinitialisation de mot de passe<br/></div>\n" +
                 "\n" +
-                "<div><br/>Lien : " + getconfirmationUrl + " </b></div>\n" +
+                "<div><br/>Veuillez cliquer sur ce lien : <a href='"+ getReinitialisationURL +"'> réinitialisationUrl </a> </b></div>\n" +
                 "\n" +
                 "<div><br/>Le code expirera dans 15 minutes<br/></div>\n" +
                 "\n" +
                 "<div><br/>Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.<br/></div>\n" +
+                "<div><br/><br/><br/>L’équipe KongoSafeManagement Shop<br/></div>\n" +
                 "</body>\n" +
                 "</html>\n";
 
@@ -128,21 +132,47 @@ public class EmailService {
             response.setStatus(406);
         }
     }
-//    @Async
-//    public void send_ForgotPswdEmail(Token token) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("tatibatchi15@gmail.com");
-//        message.setTo(token.getUser().getUsername());
-//        message.setSubject("Your activation Code");
-//
-//        String texte = String.format(
-//                "Hi "+token.getUser().getFirst_name()+
-//                "%s, <br /> Use this secret code : "+token.getCode()+" to complete the configuration." +
-//                "<br /> The code will expire in 15 min"
-//
-//        );
-//        message.setText(texte);
-//
-//        mailSender.send(message);
-//    }
+    @Async
+    public void send_ConfiNewPswd(String getUsername, String getFirst_name, HttpServletResponse response) throws MessagingException {
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+        helper.setFrom(NoReplyEmail);
+        helper.setTo(getUsername);
+        helper.setSubject("Confirmation du changement de votre mot de passe");
+
+        String html = "<!doctype html>\n" +
+                "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"\n" +
+                "      xmlns:th=\"http://www.thymeleaf.org\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\"\n" +
+                "          content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+                "    <title>noreply@email</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<div>Cher, " + getFirst_name + "<br/></div>\n" +
+                "\n" +
+                "<div><br/>Nous vous informons que votre mot de passe a bien été modifié.<br/></div>\n" +
+                "\n" +
+                "<div><br/>Si vous n’êtes pas à l’origine de cette demande, " +
+                "nous vous invitons à modifier le mot de passe ou à nous envoyé un email.<br/></div>\n" +
+                "\n" +
+                "<div><br/>Nous vous remercions pour votre confiance.<br/></div>\n" +
+                "<div><br/><br/>L’équipe KongoSafeManagement Shop<br/></div>\n" +
+                "</body>\n" +
+                "</html>\n";
+
+        helper.setText(html, true);
+        try {
+            mailSender.send(mimeMessage);
+            response.setStatus(200);
+        } catch (Exception e) {
+            response.setStatus(406);
+        }
+    }
+
+//            FileSystemResource fileSystem = new FileSystemResource(new File(attachment));
+//            helper.addAttachment(Objects.requireNonNull(fileSystem.getFilename()), fileSystem);
 }

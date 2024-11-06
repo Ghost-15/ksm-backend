@@ -1,34 +1,30 @@
 package www.com.ksm_backend.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import www.com.ksm_backend.config.HelperUtils;
+import www.com.ksm_backend.config.TokenType;
 import www.com.ksm_backend.dto.*;
 import www.com.ksm_backend.entity.Code;
 import www.com.ksm_backend.entity.Role;
 import www.com.ksm_backend.entity.Token;
-import www.com.ksm_backend.config.TokenType;
 import www.com.ksm_backend.entity.User;
 import www.com.ksm_backend.repository.CodeRepository;
 import www.com.ksm_backend.repository.TokenRepository;
 import www.com.ksm_backend.repository.UserRepository;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -37,7 +33,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @Slf4j
 @Service
 public class AuthService {
-  private static final String CONFIRMATION_URL = "http://localhost:5173/";
+  private static final String reinitialisationURL = "http://localhost:5173/";
   @Autowired
   private UserRepository userRepository;
 //  @Autowired
@@ -58,18 +54,19 @@ public class AuthService {
   private UserDetailsService userDetailsService;
 
   public void addUser(RegisterRequest request, HttpServletResponse response) {
+    String randomCode = UUID.randomUUID().toString();
+
     User user = new User();
     user.setFirst_name(request.getFirst_name());
     user.setLast_name(request.getLast_name());
     user.setUsername(request.getUsername());
-    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    user.setPassword(passwordEncoder.encode(randomCode));
     user.setPhone_number(request.getPhone_number());
     user.setRole(request.getRole());
 
     try {
       userRepository.save(user);
-//      emailService.send_WelcomeEmail(request.getUsername(), request.getFirst_name());
-
+      emailService.send_WelcomeEmail(request.getUsername(), request.getLast_name());
       response.setStatus(200);
     } catch (Exception e) {
       response.setStatus(406);
@@ -181,6 +178,28 @@ public class AuthService {
 //    }
 //    return null;
   }
+  public void changePswd(PswdDTO request, Principal connectedUser, HttpServletResponse response) {
+    var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+    System.out.println("user : "+user.getUsername());
+    if (passwordEncoder.matches(request.getCurrentPswd(), user.getPassword()) ) {
+      if (request.getNewPswd().equals(request.getComfirmPswd())){
+        user.setPassword(passwordEncoder.encode(request.getComfirmPswd()));
+        System.out.println("getNewPswd : "+request.getNewPswd());
+        System.out.println("getComfirmPswd : "+request.getComfirmPswd());
+        try {
+//      userRepository.save(user);
+          emailService.send_ConfiNewPswd(user.getUsername(), user.getFirst_name(), response);
+          response.setStatus(HttpServletResponse.SC_OK);
+        } catch (Exception e){
+          response.setStatus(406);
+        }
+      } else {
+        response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+      }
+    } else {
+      response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+    }
+  }
   public void linkToNewPswd(AuthRequest request, HttpServletResponse response){
     var user = userRepository.findByUsername(request.getUsername()).orElseThrow();
     String randomCode = UUID.randomUUID().toString();
@@ -192,7 +211,7 @@ public class AuthService {
             .build();
     codeRepository.save(code);
     try {
-      emailService.send_linkToNewPswd(user.getUsername(), CONFIRMATION_URL + randomCode, response);
+      emailService.send_linkToNewPswd(user.getUsername(), reinitialisationURL + randomCode, response);
       response.setStatus(200);
     } catch (Exception e){
       response.setStatus(406);
@@ -212,7 +231,8 @@ public class AuthService {
 
         String json = HelperUtils.JSON_WRITER.writeValueAsString(
                 MessageDTO.builder()
-                        .userId(checkCode.getUser().getUser_id())
+//                        .userId(checkCode.getUser().getUser_id())
+                        .username(checkCode.getUser().getUsername())
                         .message("validated")
                         .build());
 
@@ -220,37 +240,22 @@ public class AuthService {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
-        System.out.println("json :"+json);
-
       }
     } catch (Exception e){
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
   }
-  public void changePswd(PswdDTO request, Principal connectedUser, HttpServletResponse response) {
-    var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-
-    if (passwordEncoder.matches(request.getCurrentPswd(), user.getPassword()) ) {
-      if (request.getNewPswd().equals(request.getComfirmPswd())){
-        user.setPassword(passwordEncoder.encode(request.getComfirmPswd()));
-//      userRepository.save(user);
-//      emailService.send_changePswdEmail(user.getUsername(), user.getFirst_name());
-        response.setStatus(HttpServletResponse.SC_OK);
-      } else {
-        response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-      }
-    } else {
-      response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-    }
-  }
   public void changePswdLink(PswdDTO pswdDTO, HttpServletResponse response) {
-    var user = userRepository.findById(pswdDTO.getUserId()).orElseThrow();
-
+    var user = userRepository.findByUsername(pswdDTO.getUsername()).orElseThrow();
     if (pswdDTO.getNewPswd().equals(pswdDTO.getComfirmPswd())){
       user.setPassword(passwordEncoder.encode(pswdDTO.getComfirmPswd()));
-      System.out.println("bien joue");
+      try {
 //      userRepository.save(user);
-//      emailService.send_changePswdEmail(user.getUsername(), user.getFirst_name());
+        emailService.send_ConfiNewPswd(user.getUsername(), user.getFirst_name(), response);
+        response.setStatus(200);
+      } catch (Exception e){
+        response.setStatus(406);
+      }
       response.setStatus(HttpServletResponse.SC_OK);
     } else {
       response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
