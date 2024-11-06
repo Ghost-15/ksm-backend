@@ -231,9 +231,7 @@ public class AuthService {
 
         String json = HelperUtils.JSON_WRITER.writeValueAsString(
                 MessageDTO.builder()
-//                        .userId(checkCode.getUser().getUser_id())
                         .username(checkCode.getUser().getUsername())
-                        .message("validated")
                         .build());
 
         response.setStatus(200);
