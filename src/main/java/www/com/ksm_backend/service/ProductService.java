@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import www.com.ksm_backend.dto.RegisterProduct;
 import www.com.ksm_backend.entity.Category;
 import www.com.ksm_backend.entity.Product;
+import www.com.ksm_backend.entity.SousCategory;
 import www.com.ksm_backend.repository.CategoryRepository;
 import www.com.ksm_backend.repository.ProductRepository;
 import www.com.ksm_backend.repository.SousCategoryRepository;
@@ -24,11 +25,12 @@ public class ProductService {
     public void addProduct(RegisterProduct registerProduct, HttpServletResponse response) {
 
         Optional<Category> categoryOptional = categoryRepository.findByName(registerProduct.getCategory());
-//        Optional<SousCategory> sousCategory = sousCategoryRepository.findByName(register.getSousCategory());
+        Optional<SousCategory> sousCategoryOptional = sousCategoryRepository.findByName(registerProduct.getSousCategory());
 
         Product product = new Product();
         product.setName(registerProduct.getName().trim());
-        product.setCategories(categoryOptional.get());
+        product.setCategory(categoryOptional.get());
+        product.setSouscategory(sousCategoryOptional.get());
         product.setConditionnement(registerProduct.getConditionnement());
         product.setColoris(registerProduct.getColoris());
         product.setPrix(registerProduct.getPrix());

@@ -19,9 +19,9 @@ public class RegisterProduct {
     @NotNull
     @NotBlank
     private String category;
-//    @NotNull
-//    @NotBlank
-//    private String sousCategory;
+    @NotNull
+    @NotBlank
+    private String sousCategory;
     @NotNull
     @NotBlank
     private int conditionnement;
