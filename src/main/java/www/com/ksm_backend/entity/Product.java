@@ -1,6 +1,5 @@
 package www.com.ksm_backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,13 +40,13 @@ public class Product {
             name = "product_category",
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "category_id"))
-    private Category categories;
+    private Category category;
 
-//    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "product_souscategory",
-//            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"),
-//            inverseJoinColumns = @JoinColumn(name = "souscategory_id", referencedColumnName = "souscategory_id"))
-//    private SousCategory sousCategories;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_souscategory",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "souscategory_id", referencedColumnName = "souscategory_id"))
+    private SousCategory souscategory;
 
 }

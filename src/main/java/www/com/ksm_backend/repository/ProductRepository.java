@@ -11,8 +11,15 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findByName(String name);
     @Query(value = """
       select p from Product p inner join Category c\s
-      on p.categories.name = c.name\s
+      on p.category.name = c.name\s
       where c.name = :name \s
       """)
     List<Product> findAllByCategorie(String name);
+
+    @Query(value = """
+      select p from Product p inner join SousCategory s\s
+      on p.souscategory.name = s.name\s
+      where s.name = :name \s
+      """)
+    List<Product> findAllBySousCategory(String name);
 }

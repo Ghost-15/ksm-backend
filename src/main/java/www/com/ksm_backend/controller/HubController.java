@@ -42,9 +42,13 @@ public class HubController {
     public List<Product> getAllProducts() {
         return repository.findAll();
     }
-    @GetMapping("/getByCategorie/{categorieName}")
-    public List<Product> getByCategorie(@PathVariable("categorieName") String categorieName) {
-        return repository.findAllByCategorie(categorieName);
+    @GetMapping("/getByCategory/{categoryName}")
+    public List<Product> getByCategorie(@PathVariable("categoryName") String categoryName) {
+        return repository.findAllByCategorie(categoryName);
+    }
+    @GetMapping("/getBySousCategory/{souscategoryName}")
+    public List<Product> getBySousCategory(@PathVariable("souscategoryName") String souscategoryName) {
+        return repository.findAllBySousCategory(souscategoryName);
     }
     @GetMapping("/getProduct/{productName}")
     public ResponseEntity<Product> getProduct(@PathVariable("productName") String productName) {
