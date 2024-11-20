@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>www.com</groupId>
-    <artifactId>ksm_backend</artifactId>
+    <artifactId>ksm-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ksm_backend</name>
-    <description>ksm_backend</description>
+    <name>ksm-backend</name>
+    <description>ksm-backend</description>
     <url/>
     <licenses>
         <license/>
