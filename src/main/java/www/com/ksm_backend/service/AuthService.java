@@ -180,14 +180,11 @@ public class AuthService {
   }
   public void changePswd(PswdDTO request, Principal connectedUser, HttpServletResponse response) {
     var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-    System.out.println("user : "+user.getUsername());
     if (passwordEncoder.matches(request.getCurrentPswd(), user.getPassword()) ) {
       if (request.getNewPswd().equals(request.getComfirmPswd())){
         user.setPassword(passwordEncoder.encode(request.getComfirmPswd()));
-        System.out.println("getNewPswd : "+request.getNewPswd());
-        System.out.println("getComfirmPswd : "+request.getComfirmPswd());
         try {
-//      userRepository.save(user);
+          userRepository.save(user);
           emailService.send_ConfiNewPswd(user.getUsername(), user.getFirst_name(), response);
           response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e){
@@ -248,7 +245,7 @@ public class AuthService {
     if (pswdDTO.getNewPswd().equals(pswdDTO.getComfirmPswd())){
       user.setPassword(passwordEncoder.encode(pswdDTO.getComfirmPswd()));
       try {
-//      userRepository.save(user);
+        userRepository.save(user);
         emailService.send_ConfiNewPswd(user.getUsername(), user.getFirst_name(), response);
         response.setStatus(200);
       } catch (Exception e){
