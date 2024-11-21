@@ -34,6 +34,11 @@ public class HubController {
     @Autowired
     private ProductRepository repository;
 
+    @GetMapping("/message")
+    public String message(){
+        return "Bien joue Negro";
+    }
+
     @PostMapping("/addProduct")
     public void addProduct(@RequestBody RegisterProduct registerProduct, HttpServletResponse response) {
         service.addProduct(registerProduct, response);
