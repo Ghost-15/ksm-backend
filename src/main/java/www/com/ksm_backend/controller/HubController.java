@@ -34,7 +34,7 @@ public class HubController {
     @Autowired
     private ProductRepository repository;
 
-    @GetMapping("/message")
+    @GetMapping("/test")
     public String message(){
         return "Bien joue Negro";
     }
