@@ -2,16 +2,14 @@ package www.com.ksm_backend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
-import www.com.ksm_backend.dto.*;
+import www.com.ksm_backend.dto.AuthRequest;
+import www.com.ksm_backend.dto.AuthResponse;
+import www.com.ksm_backend.dto.PswdDTO;
 import www.com.ksm_backend.service.AuthService;
 
-import java.io.IOException;
 import java.security.Principal;
 
 @RestController
