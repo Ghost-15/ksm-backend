@@ -1,0 +1,9 @@
+PS C:\Users\tatib\IdeaProjects\ksm-backend> $env:DATASOURCE_URL="jdbc:postgresql://localhost:5432/ksmshop-db"
+PS C:\Users\tatib\IdeaProjects\ksm-backend> $env:DATASOURCE_USER="postgres"
+PS C:\Users\tatib\IdeaProjects\ksm-backend> $env:DATASOURCE_PASSWORD="Timosleboss15"
+PS C:\Users\tatib\IdeaProjects\ksm-backend> $env:FRONTEND_URL="http://localhost:5173"
+PS C:\Users\tatib\IdeaProjects\ksm-backend> ./mvnw package
+
+PS C:\Users\tatib\IdeaProjects\ksm-backend> docker build -t ksm-spring .
+PS C:\Users\tatib\IdeaProjects\ksm-backend> docker tag ksm-spring timosleboss/ksm-spring
+PS C:\Users\tatib\IdeaProjects\ksm-backend> docker push timosleboss/ksm-spring
