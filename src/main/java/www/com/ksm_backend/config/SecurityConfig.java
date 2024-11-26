@@ -32,7 +32,7 @@ import static www.com.ksm_backend.entity.Role.DEV;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${frontend.url}")
+    @Value("${frontend-url}")
     protected String url;
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;

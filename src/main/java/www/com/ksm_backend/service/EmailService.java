@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,8 +17,10 @@ import www.com.ksm_backend.entity.Token;
 @AllArgsConstructor
 public class EmailService {
     private final JavaMailSender mailSender;
-    private static final String NoReplyEmail = "tatibatchi15@gmail.com";
-    private static final String ForgotPswdURL = "http://localhost:5173/ForgotPswd";
+    @Value("${no-reploy-email}")
+    protected String NoReplyEmail;
+    @Value("${frontend-url}")
+    protected String ForgotPswdURL;
     @Async
     public void send_ContactUs(ContactUsDTO contactUsDTO, HttpServletResponse response) throws MessagingException {
 
