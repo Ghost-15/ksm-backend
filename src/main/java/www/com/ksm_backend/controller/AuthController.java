@@ -23,8 +23,8 @@ public class AuthController {
     return ResponseEntity.ok(service.authenticate(request, response));
   }
   @GetMapping("/refresh")
-  public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-    return ResponseEntity.ok(service.refreshToken(request, response));
+  public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    service.refreshToken(request, response);
   }
   @PostMapping("/changePswd")
   public void changePassword(@RequestBody PswdDTO pswdDTO, Principal connectedUser, HttpServletResponse response) {

@@ -1,7 +1,7 @@
-$env:DATASOURCE_URL="jdbc:postgresql://localhost:5432/ksmshop-db"
-$env:DATASOURCE_USER="postgres"
-$env:DATASOURCE_PASSWORD="Timosleboss15"
-$env:FRONTEND_URL="http://localhost:5173"
+$env:DATASOURCE_URL="jdbc:postgresql://ep-restless-union-a5fxtiv3.us-east-2.aws.neon.tech/KSM-SHOP?sslmode=require"
+$env:DATASOURCE_USER="neondb_owner"
+$env:DATASOURCE_PASSWORD="LrAW4XTmM2Qs"
+$env:FRONTEND_URL="https://test-frontend-9ow0.onrender.com"
 $env:NO_REPLY_EMAIL="tatibatchi15@gmail.com"
 $env:EMAIL_PSWD="hkvvtymehcuagikv"
 ./mvnw package

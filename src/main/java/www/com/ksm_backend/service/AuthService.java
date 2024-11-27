@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import www.com.ksm_backend.config.HelperUtils;
+import www.com.ksm_backend.config.Writer;
 import www.com.ksm_backend.config.TokenType;
 import www.com.ksm_backend.dto.*;
 import www.com.ksm_backend.entity.Code;
@@ -121,11 +121,11 @@ public class AuthService {
     tokenRepository.saveAll(validUserTokens);
   }
 
-  public AuthResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
+  public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
     String token;
     String username;
-    String jwtToken = null;
-    String role = "";
+    String jwtToken;
+    String role;
 //    String authorizationHeader = request.getHeader(AUTHORIZATION);
 //    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 //      String refreshToken = authorizationHeader.substring("Bearer ".length());
@@ -148,15 +148,21 @@ public class AuthService {
                 jwtToken = jwtService.generateAccesToken(userDetails);
                 revokeAllUserTokens(user);
                 saveUserToken(user, jwtToken);
+
                 Cookie authCookie = new Cookie(String.valueOf(user.getUser_id()), jwtService.generateRefreshToken(userDetails));
                 authCookie.setHttpOnly(true);
                 authCookie.setSecure(true);
                 authCookie.setPath("/");
                 authCookie.setMaxAge((int) Duration.of(1, ChronoUnit.DAYS).toSeconds());
 
-                
+                String json = Writer.JSON_WRITER.writeValueAsString(
+                        AuthResponse.builder()
+                                .access_token(jwtToken)
+                                .role(Role.valueOf(role))
+                                .build());
+                response.getWriter().write(json);
                 response.addCookie(authCookie);
-                
+
               } catch (Exception e) {
                 e.printStackTrace();
                 response.setStatus(FORBIDDEN.value());
@@ -168,11 +174,6 @@ public class AuthService {
       } else {
         response.setStatus(UNAUTHORIZED.value());
       }
-
-    return AuthResponse.builder()
-            .access_token(jwtToken)
-            .role(Role.valueOf(role))
-            .build();
 //    }else{
 //      response.setStatus(UNAUTHORIZED.value());
 //    }
@@ -226,7 +227,7 @@ public class AuthService {
         checkCode.setValidated(LocalDateTime.now());
         codeRepository.save(checkCode);
 
-        String json = HelperUtils.JSON_WRITER.writeValueAsString(
+        String json = Writer.JSON_WRITER.writeValueAsString(
                 MessageDTO.builder()
                         .username(checkCode.getUser().getUsername())
                         .build());
