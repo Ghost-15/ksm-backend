@@ -19,7 +19,7 @@ public class EmailService {
     @Value("${no-reploy-email}")
     protected String NoReplyEmail;
     @Value("${frontend-url}")
-    protected String ForgotPswdURL;
+    protected String url;
     private JavaMailSender mailSender;
     @Async
     public void send_ContactUs(ContactUsDTO contactUsDTO, HttpServletResponse response) throws MessagingException {
@@ -85,7 +85,7 @@ public class EmailService {
                 "\n" +
                 "<div><br/>Votre compte a été créé et un mot de passe vous a été automatiquement affectter.<br/></div>\n" +
                 "\n" +
-                "<div><br/>Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='"+ ForgotPswdURL +"'>ForgotPswdURL</a> <br/></div>\n" +
+                "<div><br/>Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : <a href='"+ url +"'>ForgotPswdURL</a> <br/></div>\n" +
                 "\n" +
                 "<div><br/><br/><br/>L’équipe KongoSafeManagement Shop<br/></div>\n" +
                 "</body>\n" +
@@ -118,7 +118,7 @@ public class EmailService {
                 "\n" +
                 "<div><br/>Nous avons reçu une demande de réinitialisation de mot de passe<br/></div>\n" +
                 "\n" +
-                "<div><br/>Veuillez cliquer sur ce lien : <a href='"+ getReinitialisationURL +"'> réinitialisationUrl </a> </b></div>\n" +
+                "<div><br/>Veuillez cliquer sur ce lien : <a href='"+ url+getReinitialisationURL +"'> réinitialisationUrl </a> </b></div>\n" +
                 "\n" +
                 "<div><br/>Le code expirera dans 15 minutes<br/></div>\n" +
                 "\n" +

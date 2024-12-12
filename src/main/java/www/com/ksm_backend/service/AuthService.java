@@ -35,9 +35,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @AllArgsConstructor
 @Service
 public class AuthService {
-  @Value("${frontend-url}")
-  protected String reinitialisationURL;
-//          = "http://localhost:5173/";
   private UserRepository userRepository;
 //  private UserService userService;
   private TokenRepository tokenRepository;
@@ -117,10 +114,7 @@ public class AuthService {
   }
 
   public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
-    String token;
-    String username;
-    String jwtToken;
-    String role;
+
 //    String authorizationHeader = request.getHeader(AUTHORIZATION);
 //    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 //      String refreshToken = authorizationHeader.substring("Bearer ".length());
@@ -128,6 +122,10 @@ public class AuthService {
 
       if(request.getCookies() != null){
         for(Cookie cookie: request.getCookies()){
+          String token;
+          String username;
+          String jwtToken;
+          String role;
 
             token = cookie.getValue();
             username = jwtService.extractUsername(token);
@@ -204,7 +202,7 @@ public class AuthService {
             .build();
     codeRepository.save(code);
     try {
-      emailService.send_linkToNewPswd(user.getUsername(), reinitialisationURL + randomCode, response);
+      emailService.send_linkToNewPswd(user.getUsername(), randomCode, response);
       response.setStatus(200);
     } catch (Exception e){
       response.setStatus(406);
