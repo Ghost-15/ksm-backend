@@ -3,6 +3,7 @@ package www.com.ksm_backend.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,13 +13,14 @@ import org.springframework.stereotype.Service;
 import www.com.ksm_backend.dto.ContactUsDTO;
 
 @Service
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class EmailService {
     @Value("${no-reploy-email}")
     protected String NoReplyEmail;
     @Value("${frontend-url}")
     protected String ForgotPswdURL;
-    private final JavaMailSender mailSender;
+    private JavaMailSender mailSender;
     @Async
     public void send_ContactUs(ContactUsDTO contactUsDTO, HttpServletResponse response) throws MessagingException {
 

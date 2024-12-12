@@ -13,12 +13,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "souscategory")
 public class SousCategory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "souscategory_id")
     private int souscategory_id;
-
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 }

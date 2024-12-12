@@ -2,6 +2,7 @@ package www.com.ksm_backend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,10 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/backend")
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class AuthController {
-  private final AuthService service;
+  private AuthService service;
 
   @PostMapping("/auth")
   public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request, HttpServletResponse response) {

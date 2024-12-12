@@ -3,15 +3,16 @@ package www.com.ksm_backend.service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import www.com.ksm_backend.config.Writer;
 import www.com.ksm_backend.config.TokenType;
+import www.com.ksm_backend.config.Writer;
 import www.com.ksm_backend.dto.*;
 import www.com.ksm_backend.entity.Code;
 import www.com.ksm_backend.entity.Role;
@@ -31,26 +32,20 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
+@AllArgsConstructor
 @Service
 public class AuthService {
-  private static final String reinitialisationURL = "http://localhost:5173/";
-  @Autowired
+  @Value("${frontend-url}")
+  protected String reinitialisationURL;
+//          = "http://localhost:5173/";
   private UserRepository userRepository;
-//  @Autowired
 //  private UserService userService;
-  @Autowired
   private TokenRepository tokenRepository;
-  @Autowired
   private CodeRepository codeRepository;
-  @Autowired
   private PasswordEncoder passwordEncoder;
-  @Autowired
   private AuthenticationManager authenticationManager;
-  @Autowired
   private JwtService jwtService;
-  @Autowired
   private EmailService emailService;
-  @Autowired
   private UserDetailsService userDetailsService;
 
   public void addUser(RegisterRequest request, HttpServletResponse response) {

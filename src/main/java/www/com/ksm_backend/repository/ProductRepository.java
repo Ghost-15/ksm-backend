@@ -15,11 +15,15 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
       where c.name = :name \s
       """)
     List<Product> findAllByCategorie(String name);
-
     @Query(value = """
       select p from Product p inner join SousCategory s\s
       on p.souscategory.name = s.name\s
       where s.name = :name \s
       """)
     List<Product> findAllBySousCategory(String name);
+    @Query(value = """
+      delete from Product p\s
+      where p.name = :name \s
+      """)
+    void deleteProductByName(String name);
 }

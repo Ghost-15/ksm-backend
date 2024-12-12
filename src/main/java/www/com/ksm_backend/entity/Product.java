@@ -19,8 +19,6 @@ public class Product {
     private int product_id;
     @Column(name = "name", nullable = false, unique = true, length = 100)
     private String name;
-//    @Column(name = "category", nullable = false, length = 100)
-//    private String category;
     @Column(name = "conditionnement", nullable = false)
     private int conditionnement;
     @Column(name = "coloris", nullable = false)

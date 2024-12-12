@@ -1,7 +1,7 @@
 package www.com.ksm_backend.service;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import www.com.ksm_backend.dto.RegisterProduct;
 import www.com.ksm_backend.entity.Category;
@@ -13,14 +13,11 @@ import www.com.ksm_backend.repository.SousCategoryRepository;
 
 import java.util.List;
 import java.util.Optional;
-
+@AllArgsConstructor
 @Service
 public class ProductService {
-    @Autowired
     ProductRepository productRepository;
-    @Autowired
     CategoryRepository categoryRepository;
-    @Autowired
     SousCategoryRepository sousCategoryRepository;
     public void addProduct(RegisterProduct registerProduct, HttpServletResponse response) {
 
@@ -37,6 +34,7 @@ public class ProductService {
         product.setPicture_url(registerProduct.getPicture_url().trim());
         product.setPdf_url(registerProduct.getPdf_url().trim());
         product.setDescription(registerProduct.getDescription());
+
         try {
             productRepository.save(product);
             response.setStatus(200);
@@ -49,7 +47,6 @@ public class ProductService {
         Optional<Product> product = productRepository.findByName(productName);
         return Product.builder()
                 .name(product.get().getName())
-//                .category(product.get().getCategory())
                 .conditionnement(product.get().getConditionnement())
                 .coloris(product.get().getColoris())
                 .prix(product.get().getPrix())
@@ -61,6 +58,10 @@ public class ProductService {
 
     public List<Product> getAllProduct() {
         return productRepository.findAll();
+    }
+
+    public void deleteProduct(String product_name){
+        productRepository.deleteProductByName(product_name);
     }
 
 }
