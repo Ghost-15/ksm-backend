@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static www.com.ksm_backend.entity.Role.CEO;
@@ -33,8 +32,8 @@ import static www.com.ksm_backend.entity.Role.DEV;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${frontend-url}")
-    protected String url;
+//    @Value("${frontend-url}")
+//    protected String url;
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -61,7 +60,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList(url));
+        configuration.setAllowedOrigins(List.of("https://www.tbst-development.com/","https://test-frontend-9ow0.onrender.com/","http://localhost:5173/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
