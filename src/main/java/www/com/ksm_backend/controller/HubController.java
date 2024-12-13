@@ -1,7 +1,6 @@
 package www.com.ksm_backend.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/HUB")
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequiredArgsConstructor
 public class HubController {
-    private ProductService service;
-    private ProductRepository repository;
+    private final ProductService service;
+    private final ProductRepository repository;
 
     @PostMapping("/addProduct")
     public void addProduct(@RequestBody RegisterProduct registerProduct, HttpServletResponse response) {

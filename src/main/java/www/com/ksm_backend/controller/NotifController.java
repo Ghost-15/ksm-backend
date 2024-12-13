@@ -2,7 +2,6 @@ package www.com.ksm_backend.controller;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +12,10 @@ import www.com.ksm_backend.service.EmailService;
 
 @RestController
 @RequestMapping("/notif")
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequiredArgsConstructor
 public class NotifController {
-    private EmailService service;
+    private final EmailService service;
 
     @PostMapping("/contactUs")
     public void contactUs(@RequestBody ContactUsDTO contactUsDTO, HttpServletResponse response) throws MessagingException {
