@@ -2,7 +2,6 @@
 package www.com.ksm_backend.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -32,8 +31,6 @@ import static www.com.ksm_backend.entity.Role.DEV;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-//    @Value("${frontend-url}")
-//    protected String url;
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -57,6 +54,7 @@ public class SecurityConfig {
                         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()));
         return http.build();
     }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
